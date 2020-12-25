@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.springframework.org/schema/data/jaxb"
+      layout:decorate="~{fragments/main_layout}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div layout:fragment="content" class="container">
+
+    <div style="margin-top:50px">
+        <div class="my-3">
+            <a href="/register" class="btn btn-secondary btn-lg mt-4">ADD NEW USER</a>
+        </div>
+            <table class="table table-hover table-striped text-center" style="width:80vw;">
+                <thead>
+                <tr>
+                    <th scope="col"> Name </th>
+                    <th scope="col"> Surname </th>
+                    <th scope="col"> Email </th>
+                    <th scope="col"> Delete User </th>
+                    <th scope="col"> Update User </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${members}">
+                    <td><span th:text="${member.firstName}"> </span></td>
+                    <td><span th:text="${member.lastName}"> </span></td>
+                    <td><span th:text="${member.email}"> </span></td>
+                    <td><a th:href= "@{delete/__${member.email}__}" type="button" class="btn btn-light" style="width:50px; height:40px;"><i class="fa fa-times" aria-hidden="true" style="color:whitesmoke; font-size: 24px;"></i></a></td>
+                    <td><a th:href= "@{update/__${member.email}__}" type="button" class="btn btn-light" style="width:50px; height:40px;"><i class="fa fa-pencil-square-o" aria-hidden="true" style="color:whitesmoke; font-size: 24px;"></i></a></td>
+
+                </tr>
+                </tbody>
+            </table>
+    </div>
+    <a sec:authorize="isAuthenticated()" class="btn btn-lg btn-danger" href="/logout" role="button">Logout &raquo;</a>
+</div>
+</body>
+</html>

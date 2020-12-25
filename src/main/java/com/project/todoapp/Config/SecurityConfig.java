@@ -1,0 +1,80 @@
+package com.project.todoapp.Config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import javax.sql.DataSource;
+
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    AuthenticationSuccessHandler successHandler;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .usersByUsernameQuery("select email as principal, password as credentails, true from member where email=?")
+                .authoritiesByUsernameQuery("select member_email as principal, role_name as role from member_roles where member_email=?")
+                .passwordEncoder(passwordEncoder()).rolePrefix("ROLE_");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // TODO Auto-generated method stub
+        return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        /*/*http.csrf().disable();
+        http.authorizeRequests().antMatchers("/register", "/login").permitAll()
+                .antMatchers("/index").hasAnyRole("MEMBER, ADMIN")
+                .and().formLogin().loginPage("/login").permitAll()
+                .defaultSuccessUrl("/").and().logout().logoutSuccessUrl("/logout");*/
+
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers( "/members").hasRole("ADMIN")
+                .antMatchers( "/register").hasRole("ADMIN")
+                .antMatchers( "/delete").hasRole("ADMIN")
+                .antMatchers( "/update").hasRole("ADMIN")
+                .antMatchers( "/user").hasRole("USER")
+                .antMatchers("/resources/**").permitAll()
+                .antMatchers("/resources/static/**").permitAll()
+                .anyRequest().authenticated()
+                .and().formLogin().loginPage("/login")
+                .successHandler(successHandler)
+                .permitAll()
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login");
+
+        /*http.csrf().disable();
+        http.authorizeRequests().antMatchers("/register","/login").permitAll()
+                .antMatchers("/index").hasAnyRole("MEMBER, ADMIN")
+                .antMatchers( "/members","/delete","/update").hasRole("ADMIN")
+                .antMatchers( "/user").hasRole("USER")
+                .and().formLogin().loginPage("/login")
+                .successHandler(successHandler)
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login");*/
+    }
+}
+

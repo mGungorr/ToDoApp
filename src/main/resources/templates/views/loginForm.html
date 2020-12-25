@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.springframework.org/schema/data/jaxb"
+      layout:decorate="~{fragments/main_layout}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script>
+  function addDarkmodeWidget() {
+    new Darkmode().showWidget();
+  }
+  window.addEventListener('load', addDarkmodeWidget);
+</script>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="simple-login-container col-md-4 offset-md-4" style="margin-top:100px">
+        <h2>Login Form</h2>
+        <form th:action="@{/login}" method="post">
+            <fieldset>
+                <div class="form-group">
+                    <label for="email" class="form-control-label">Email</label> <input
+                        type="text" class="form-control" id="email" name="username"/>
+
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-control-label">Password</label> <input
+                        type="password" class="form-control"
+                        id="password" name="password"/>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-12  form-group">
+                        <input type="submit" class="btn btn-lg btn-success btn-block w-100 p-3" value="Login">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+</body>
+</html>
